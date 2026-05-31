@@ -1,4 +1,3 @@
-test
 from __future__ import annotations
 
 import hashlib
@@ -1272,6 +1271,7 @@ def init_db() -> None:
     cur.execute("UPDATE item_categories SET item_type = UPPER(TRIM(item_type)) WHERE item_type IS NOT NULL")
     cur.execute("UPDATE item_categories SET item_type = 'CYLINDER' WHERE item_type = 'CYLENDER'")
     cur.execute("UPDATE item_categories SET item_type = NULL WHERE item_type NOT IN ('CONTAINER', 'CYLINDER', 'OTHER')")
+    cur.execute("UPDATE item_categories SET item_type = 'CONTAINER' WHERE item_type IS NULL OR TRIM(item_type) = ''")
     normalize_item_category_prefix_rows(cur)
     seed_now = utc_now_iso()
     for default_unit in sorted(ALLOWED_CYLINDER_VOLUME_UNITS):
