@@ -1,4 +1,3 @@
-test
 const state = {
   labels: null,
   user: null,
@@ -823,6 +822,13 @@ function getCategoryNamesForItemType(itemType) {
     .filter((value, index, values) => value.length > 0 && values.indexOf(value) === index);
   if (activeNames.length > 0) {
     return activeNames;
+  }
+  const allNames = (state.itemCategories || [])
+    .filter((entry) => entry && (!normalizedType || String(entry.item_type || "").trim().toUpperCase() === normalizedType))
+    .map((entry) => String(entry.category_name || "").trim())
+    .filter((value, index, values) => value.length > 0 && values.indexOf(value) === index);
+  if (allNames.length > 0) {
+    return allNames;
   }
   if (normalizedType) {
     return [normalizedType];
@@ -4879,6 +4885,13 @@ function attachForms() {
         }
       });
       syncItemCreateCategorySelect();
+      if (categoryTypeSelect && showCategoryTypeSelect && !getItemCreateCategoryType()) {
+        const firstAvailableType = getCategoryItemTypes()[0] || "";
+        if (firstAvailableType) {
+          categoryTypeSelect.value = firstAvailableType;
+          syncItemCreateCategorySelect();
+        }
+      }
     }
     if (itemCreateTypeSelect) {
       itemCreateTypeSelect.addEventListener("change", async () => {
